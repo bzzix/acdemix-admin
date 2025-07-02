@@ -6,7 +6,7 @@ module.exports = {
       exec_mode: 'cluster',
       instances: 'max', // أو رقم محدد حسب موارد الخادم
       script: './.output/server/index.mjs',
-      cwd: '/home/username/public_html/your-project',
+      cwd: '/home/bzzix/public_html/acdemix/portal-admin',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,

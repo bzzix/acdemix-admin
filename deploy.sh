@@ -1,43 +1,49 @@
 #!/bin/bash
 
-# متغيرات
+# Variables
 PROJECT_DIR="/home/bzzix/public_html/acdemix/portal-admin"
 APP_NAME="acdemix-admin"
 
-echo "🚀 بدء عملية النشر..."
 
-# الانتقال لمجلد المشروع
+echo "🚀 Starting deployment..."
+
+# Go to project directory
 cd $PROJECT_DIR
 
-# سحب آخر التحديثات
-echo "📥 سحب التحديثات من GitHub..."
+# Fix Git ownership issue
+echo "🔧 Fixing Git settings..."
+git config --global --add safe.directory $PROJECT_DIR
+
+# Pull latest updates
+echo "📥 Pulling updates from GitHub..."
 git pull origin main
 
-# تثبيت التبعيات
-echo "📦 تثبيت التبعيات..."
-npm install --production
+# Install dependencies
+echo "📦 Installing dependencies..."
+npm install --omit=dev
+npm install --save-dev sass-embedded-linux-x64 sass-embedded
 
-# بناء المشروع
-echo "🔨 بناء المشروع..."
+# Build the project
+echo "🔨 Building the project..."
 npm run build
 
-# إنشاء مجلد اللوجز إذا لم يكن موجوداً
+# Create logs directory if it doesn't exist
 mkdir -p logs
 
-# إيقاف التطبيق إذا كان يعمل
-echo "⏹️ إيقاف التطبيق..."
+# Stop the app if running
+echo "⏹️ Stopping the app..."
 pm2 stop $APP_NAME 2>/dev/null || true
 
-# تشغيل التطبيق
-echo "▶️ تشغيل التطبيق..."
-pm2 start ecosystem.config.js --env production
+# Start the app
+echo "▶️ Starting the app..."
+pm2 start ecosystem.config.cjs --env production
 
-# حفظ إعدادات PM2
+# Save PM2 settings
 pm2 save
 
-# إعداد بدء تلقائي عند إعادة تشغيل الخادم
+# Setup PM2 startup on server reboot
 pm2 startup
 
-echo "✅ تم النشر بنجاح!"
-echo "📊 حالة التطبيق:"
+echo "✅ Deployment completed successfully!"
+echo "📊 App status:"
 pm2 status
