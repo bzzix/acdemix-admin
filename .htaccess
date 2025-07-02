@@ -1,23 +1,8 @@
 RewriteEngine On
 
-# تمكين Proxy
-RewriteCond %{HTTP_HOST} ^admin\.acdemix\.com$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.admin\.acdemix\.com$
-RewriteCond %{REQUEST_URI} !^/server-status
-RewriteCond %{REQUEST_URI} !^/server-info
-RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
-
-# إعدادات Proxy إضافية
+# إعداد البروكسي
+ProxyRequests Off
 ProxyPreserveHost On
+
 ProxyPass / http://127.0.0.1:3000/
 ProxyPassReverse / http://127.0.0.1:3000/
-
-# معالجة WebSocket (إن وجد)
-RewriteCond %{HTTP:Upgrade} websocket [NC]
-RewriteCond %{HTTP:Connection} upgrade [NC]
-RewriteRule ^/?(.*) "ws://127.0.0.1:3000/$1" [P,L]
-
-# Headers للأمان
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options DENY
-Header always set X-XSS-Protection "1; mode=block"
