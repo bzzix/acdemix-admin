@@ -3,15 +3,16 @@ module.exports = {
     {
       name: 'acdemix-admin',
       port: '3000',
-      exec_mode: 'cluster',
-      instances: 'max', // أو رقم محدد حسب موارد الخادم
+      exec_mode: 'fork', // تغيير من cluster إلى fork
+      instances: 1, // تشغيل instance واحد فقط
       script: './.output/server/index.mjs',
       cwd: '/home/bzzix/public_html/acdemix/portal-admin',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
         NITRO_HOST: '0.0.0.0',
-        NITRO_PORT: 3000
+        NITRO_PORT: 3000,
+        HOST: '0.0.0.0'
       },
       env_production: {
         NODE_ENV: 'production',
