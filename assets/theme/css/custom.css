@@ -1,0 +1,12 @@
+li.nav-item.dropdown.active {
+    background: #eee !important;
+}
+
+.lm_hover_container .lm-hover-display{
+    visibility:hidden;
+    -webkit-transition:0.3s ease;
+    transition:0.3s ease
+}
+.lm_hover_container:hover .lm-hover-display{
+    visibility:visible
+}

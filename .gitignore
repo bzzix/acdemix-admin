@@ -1,0 +1,32 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Static assets (except illustrations)
+assets/static/*
+!assets/static/illustrations/
+
+# Optional: Keep empty folders tracked
+assets/static/illustrations/.gitkeep
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# IDE & OS files
+.DS_Store
+.idea/
+.vscode/
+.fleet/
+
+# Local env files
+.env
+.env.*
+!.env.example
