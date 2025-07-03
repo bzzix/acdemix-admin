@@ -10,9 +10,9 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
-        NITRO_HOST: '0.0.0.0',
+        NITRO_HOST: '127.0.0.1',
         NITRO_PORT: 3000,
-        HOST: '0.0.0.0'
+        HOST: '127.0.0.1'
       },
       env_production: {
         NODE_ENV: 'production',

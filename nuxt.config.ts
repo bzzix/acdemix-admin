@@ -150,7 +150,7 @@ export default defineNuxtConfig({
   // 13. إعدادات التطوير
   devServer: {
     port: Number(process.env.DEV_PORT) || 3000,
-    host: process.env.DEV_HOST || '0.0.0.0'
+    host: process.env.DEV_HOST || '127.0.0.1'
   },
   // إعدادات التحسين
   experimental: {
