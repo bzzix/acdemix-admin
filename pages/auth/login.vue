@@ -12,7 +12,7 @@
                     <img :src="appLogo" height="36" alt="" />
                 </template>
                 <template v-else>
-                    <h1>{{ appName || tenantName }}</h1>
+                    <h1>{{ appName }}</h1>
                 </template>
                 </NuxtLink>
             </div>
@@ -60,7 +60,11 @@
                     </div>
 
                     <div class="form-footer">
-                    <button type="submit" class="btn btn-primary w-100">تسجيل الدخول</button>
+                    <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+                        <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span v-if="!loading">تسجيل الدخول</span>
+                        <span v-else>جاري الدخول...</span>
+                    </button>
                     </div>
                 </form>
                 </div>
@@ -82,6 +86,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthService } from '@/composables/useAuthService'
+import 'izitoast/dist/css/iziToast.min.css'
 
 const router = useRouter()
 const form = ref({
@@ -92,29 +98,112 @@ const form = ref({
 
 const showPassword = ref(false)
 const errors = ref([])
+const loading = ref(false)
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
 }
 
+const { login } = useAuthService()
+
 const handleLogin = async () => {
   errors.value = []
+  loading.value = true
+  
   try {
-    // استبدل هذا بطلب تسجيل الدخول الفعلي
-    await fakeLogin(form.value)
-    router.push('/dashboard')
-  } catch (e) {
-    errors.value = ['فشل تسجيل الدخول. تأكد من البيانات.']
+    const result = await login(form.value)
+    // إذا كان هناك خطأ من الـ API أظهره للمستخدم
+    if (result && result.error) {
+      let apiMsg = result.message || result.error_description || 'فشل تسجيل الدخول. تأكد من البيانات.'
+      if (result.errors && typeof result.errors === 'object') {
+        // Laravel validation errors
+        apiMsg += '\n' + Object.values(result.errors).flat().join('\n')
+      }
+      throw new Error(apiMsg)
+    }
+    // حماية: إذا كانت النتيجة HTML أو string فيها <!DOCTYPE، اعتبرها خطأ
+    if (
+      !result ||
+      (typeof result === 'string' && result.trim().startsWith('<!DOCTYPE'))
+    ) {
+      throw new Error('فشل الإتصال بالخادم')
+    }
+    if (process.client) {
+      const iziToastImport = await import('izitoast')
+      const izi = iziToast
+      if (izi && typeof izi.success === 'function') {
+        izi.success({
+          title: 'نجاح',
+          message: 'تم تسجيل الدخول بنجاح، سيتم تحويلك للوحة التحكم',
+          position: 'topCenter',
+          rtl: true,
+          timeout: 1500
+        })
+      }
+    }
+    // توجيه مباشر بدون تأخير
+    router.push('/')
+  } catch (err) {
+    let errorMsg = 'فشل تسجيل الدخول. تأكد من البيانات.'
+    try {
+      if (err) {
+        if (typeof err === 'string') {
+          errorMsg = err
+        } else if (err.message) {
+          errorMsg = err.message
+        } else if (err.data && err.data.message) {
+          errorMsg = err.data.message
+        } else if (err.response && err.response._data && err.response._data.message) {
+          errorMsg = err.response._data.message
+        } else if (err.error && typeof err.error === 'string') {
+          errorMsg = err.error
+        } else if (err.statusMessage) {
+          errorMsg = err.statusMessage
+        } else if (err.toString) {
+          errorMsg = err.toString()
+        }
+      }
+    } catch (_) {
+      errorMsg = 'فشل تسجيل الدخول. تأكد من البيانات.'
+    }
+    if (process.client) {
+      try {
+        const iziToastImport = await import('izitoast')
+        const izi = iziToast
+        if (izi && typeof izi.error === 'function') {
+          izi.error({
+            title: 'خطأ',
+            message: errorMsg,
+            position: 'topCenter',
+            rtl: true
+          })
+        }
+      } catch (_) {
+        // تجاهل أي خطأ في iziToast
+      }
+    }
+    errors.value = [errorMsg]
+    console.error('login error', err)
+  } finally {
+    loading.value = false
   }
 }
 
-const appLogo = 'settings("appLogo")' // عيّنه حسب حالتك
-const appName = 'App Name' // أو اجلبه من إعدادات
-const tenantName = 'Tenant Name'
 
-// مثال وهمي لتسجيل الدخول
-const fakeLogin = async (credentials) => {
-  if (!credentials.email || !credentials.password) throw new Error('Invalid')
-  return true
-}
+import { useRuntimeConfig } from '#app'
+const config = useRuntimeConfig()
+const appLogo = typeof config.public?.appLogo === 'string' ? config.public.appLogo : ''
+const appName = config.public?.appName || 'App Name'
+
+definePageMeta({
+  layout: false,
+  middleware: [function redirectIfLoggedIn(to, from) {
+    if (process.client) {
+      const token = localStorage.getItem('token')
+      if (token) {
+        return navigateTo('/')
+      }
+    }
+  }]
+})
 </script>

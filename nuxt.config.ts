@@ -22,8 +22,9 @@ export default defineNuxtConfig({
     
     // المتغيرات العامة (متاحة للعميل)
     public: { 
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api',
-      appName: process.env.APP_NAME || 'Admin Panel'
+      apiBaseUrl: process.env.NUXT_API_BASE_URL || 'http://localhost:3000/api',
+      appName: process.env.APP_NAME || 'Admin Panel',
+      theme: process.env.APP_THEME || 'light' // أضف هذا السطر لدعم theme ديناميكي
     }
   },
 
@@ -37,7 +38,7 @@ export default defineNuxtConfig({
     '@/assets/theme/css/custom-rtl.css',
     '@/assets/theme/css/custom.css',
     '@/assets/theme/scss/custom.scss',
-    '@/assets/theme/izitoast/css/iziToast.min.css',
+    //'@/assets/theme/izitoast/css/iziToast.min.css',
   ],
 
   // 6. إعداد Nuxt Image
@@ -140,7 +141,7 @@ export default defineNuxtConfig({
   },
 
   // 11. إعدادات الأمان
-  ssr: true, // تفعيل Server-Side Rendering
+  ssr: false, // تفعيل وضع SPA فقط (بدون SSR)
   
   // 12. إعدادات التجميع
   build: {
