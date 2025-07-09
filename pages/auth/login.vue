@@ -87,7 +87,6 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthService } from '@/composables/useAuthService'
-import 'izitoast/dist/css/iziToast.min.css'
 
 const router = useRouter()
 const form = ref({
@@ -130,7 +129,7 @@ const handleLogin = async () => {
     }
     if (process.client) {
       const iziToastImport = await import('izitoast')
-      const izi = iziToast
+      const izi = iziToastImport.default
       if (izi && typeof izi.success === 'function') {
         izi.success({
           title: 'نجاح',
@@ -169,7 +168,7 @@ const handleLogin = async () => {
     if (process.client) {
       try {
         const iziToastImport = await import('izitoast')
-        const izi = iziToast
+        const izi = iziToastImport.default
         if (izi && typeof izi.error === 'function') {
           izi.error({
             title: 'خطأ',
