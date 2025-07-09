@@ -142,7 +142,7 @@ const logout = async () => {
 
 const confirmLogout = async () => {
   if (process.client) {
-    await import('izitoast')
+    const iziToastImport = await import('izitoast')
     const izi = iziToastImport.default
     if (izi && typeof izi.question === 'function') {
       izi.question({
