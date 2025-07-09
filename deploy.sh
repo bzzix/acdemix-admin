@@ -29,4 +29,3 @@ npm run build
 
 # Create logs directory if it doesn't exist
 mkdir -p logs
-
