@@ -4,8 +4,8 @@
 .nuxt
 .nitro
 .cache
-dist
-
+/dist
+/.output
 # Static assets (except illustrations)
 assets/static/*
 !assets/static/illustrations/
