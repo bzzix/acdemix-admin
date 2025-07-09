@@ -29,3 +29,8 @@ npm run build
 
 # Create logs directory if it doesn't exist
 mkdir -p logs
+
+# Restart the project
+echo "Restart the project..."
+sudo systemctl restart acdemix-admin
+sudo systemctl status acdemix-admin
