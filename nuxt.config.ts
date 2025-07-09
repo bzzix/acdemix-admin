@@ -119,7 +119,17 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'ar',
         dir: 'rtl'
-      }
+      },
+      script: [
+        { src: '/theme/libs/apexcharts/dist/apexcharts.amd.js', defer: true },
+        { src: '/theme/libs/jsvectormap/dist/js/jsvectormap.min.js', defer: true },
+        { src: '/theme/libs/jsvectormap/dist/maps/world.js', defer: true },
+        { src: '/theme/libs/jsvectormap/dist/maps/world-merc.js', defer: true },
+        { src: '/theme/libs/list.js/dist/list.min.js', defer: true },
+        { src: '/theme/js/tabler.min.js', defer: true },
+        { src: '/theme/js/demo.min.js', defer: true },
+        { src: '/theme/js/demo-theme.min.js', defer: true }
+      ]
     }
   },
 

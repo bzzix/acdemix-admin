@@ -21,7 +21,7 @@ export function useAuthService() {
   const login = async (credentials: LoginCredentials): Promise<any> => {
     const { post } = useApi()
     try {
-      const data = await post('admin/login', credentials)
+      const data = await post<LoginResponse>('admin/login', credentials)
       // خزّن التوكن في localStorage أو cookies إذا نجح
       if (data && data.token) {
         localStorage.setItem('token', data.token)

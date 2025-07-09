@@ -1,4 +1,25 @@
 {
   "hello": "مرحبا بك في موقعنا!",
-  "welcome": "أهلاً وسهلاً"
+  "welcome": "أهلاً وسهلاً",
+  "dashboard": "لوحة التحكم",
+  "users": "المستخدمون",
+  "tenants": "المستأجرون",
+  "support": "الدعم",
+  "settings": "الإعدادات",
+  "generalSettings": "إعدادات عامة",
+  "profile": "الملف الشخصي",
+  "security": "الأمان",
+  "maintenanceMode": "وضع الصيانة",
+  "privacy": "الخصوصية",
+  "emailSettings": "إعدادات البريد",
+  "profileSettings": "إعدادات الملف الشخصي",
+  "logoutConfirmationMessage": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+  "confirm": "تأكيد",
+  "logoutConfirm": "نعم، سجل الخروج",
+  "cancel": "إلغاء",
+  "login": "تسجيل الدخول",
+  "logOut": "تسجيل الخروج",
+  "paymentSettings": "إعدادات الدفع",
+  "stripe": "سترايب",
+  "moyasar": "ميسر"
 }

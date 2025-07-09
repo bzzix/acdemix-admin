@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     token = useCookie('admin_token').value
   }
 
-  const publicPages = ['/auth/login', '/auth/register', '/auth/forgot-password', '/support', '/terms', '/policy']
+  const publicPages = ['/auth/login', '/auth/forgot-password', '/support', '/terms', '/policy']
 
   // إذا كان مسجل دخول ويحاول الذهاب لصفحة تسجيل الدخول، وجهه مباشرة
   if (token && to.path === '/auth/login') {

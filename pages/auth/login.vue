@@ -71,7 +71,7 @@
             </div>
 
             <!-- <div class="text-center text-muted mt-3">
-                لا تملك حساباً؟ <NuxtLink to="/auth/register" tabindex="-1">سجّل الآن</NuxtLink>
+                لا تملك حساباً؟ <NuxtLink to="/auth/login" tabindex="-1">سجّل الآن</NuxtLink>
             </div> -->
             </div>
         </div>
@@ -196,7 +196,7 @@ const appLogo = typeof config.public?.appLogo === 'string' ? config.public.appLo
 const appName = config.public?.appName || 'App Name'
 
 definePageMeta({
-  layout: false,
+  layout: 'auth',
   middleware: [function redirectIfLoggedIn(to, from) {
     if (process.client) {
       const token = localStorage.getItem('token')

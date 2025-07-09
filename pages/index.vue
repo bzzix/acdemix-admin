@@ -7,5 +7,7 @@
 </template>
 
 <script setup>
-// يمكنك إضافة منطق الصفحة هنا إذا احتجت
+definePageMeta({
+  layout: 'default'
+})
 </script>

@@ -1,44 +1,50 @@
 <template>
-  <div v-if="loadingRoute" class="route-loader d-flex align-items-center justify-content-center">
-    <span class="spinner-border text-primary" style="width:2.5rem;height:2.5rem;" role="status" aria-hidden="true"></span>
-  </div>
-  <div v-else class="page">
-    <!-- Sidebar -->
-    <AppSidebar
-      :app-logo="appLogo"
-      :app-name="appName"
-      :current-user="currentUser"
-      :menu="sidebarMenu"
-      :theme="theme"
-    />
+  <div>
 
-    <div class="page-wrapper">
-      <!-- Header -->
-      <div class="page-header d-print-none">
-        <div class="container-xl">
-          <div class="row g-2 align-items-center">
-            <AppHeader :current-user="currentUser" />
+    <!-- لودر التنقل بين الصفحات -->
+    <div v-if="loadingRoute" class="route-loader d-flex align-items-center justify-content-center">
+      <span class="spinner-border text-primary" style="width:2.5rem;height:2.5rem;" role="status" aria-hidden="true"></span>
+    </div>
+
+    <!-- لودر تحميل بيانات المستخدم -->
+    <div v-else-if="loadingUser" class="user-loader d-flex align-items-center justify-content-center">
+      <div class="text-center">
+        <span class="spinner-border text-primary mb-3" style="width:2.5rem;height:2.5rem;" role="status" aria-hidden="true"></span>
+        <div class="fw-bold">جاري تحميل المستخدم...</div>
+      </div>
+    </div>
+
+    <!-- التخطيط الرئيسي -->
+    <div v-else class="page">
+      <!-- Sidebar -->
+      <AppSidebar
+        :app-logo="appLogo"
+        :app-name="appName"
+        :current-user="currentUser"
+        :menu="sidebarMenu"
+        :theme="theme"
+      />
+
+      <div class="page-wrapper">
+        <!-- Main content -->
+        <div class="page-body">
+          <div class="container-xl">
+            <slot />
           </div>
         </div>
-      </div>
 
-      <!-- Main content -->
-      <div class="page-body">
-        <div class="container-xl">
-          <slot />
-        </div>
+        <!-- Footer -->
+        <AppFooter />
       </div>
-
-      <!-- Footer -->
-      <AppFooter />
     </div>
+
   </div>
+
 </template>
 
 <script setup lang="ts">
 // استيراد الأدوات والمكونات الأساسية
-import { ref, onMounted } from 'vue'
-import AppHeader from '@/components/AppHeader.vue'
+import { ref, onMounted, computed } from 'vue'
 import AppFooter from '@/components/AppFooter.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
 import { useCurrentUser } from '@/composables/useCurrentUser'
@@ -49,19 +55,12 @@ import { useNuxtApp, useRuntimeConfig } from '#app'
 const loadingRoute = ref(false)
 
 // جلب بيانات المستخدم الحالي
-const { currentUser } = useCurrentUser()
+const { currentUser, fetchCurrentUser, loadingUser } = useCurrentUser()
 
-// إعدادات التطبيق من config العام
-const config = useRuntimeConfig()
-const appLogo = typeof config.public?.appLogo === 'string' ? config.public.appLogo : ''
-const appName = config.public?.appName || 'App Name'
-const theme = config.public?.theme === 'dark' ? 'dark' : 'light'
-
-// توليد قائمة السايدبار ديناميكيًا حسب صلاحيات المستخدم
-const { sidebarMenu } = useSidebarMenu(currentUser.value)
-
-// مراقبة التنقل بين الصفحات لإظهار اللودر
 onMounted(() => {
+  fetchCurrentUser()
+
+  // مراقبة التنقل بين الصفحات لإظهار اللودر
   const nuxtApp = useNuxtApp()
   nuxtApp.hook('page:start', () => {
     loadingRoute.value = true
@@ -70,6 +69,15 @@ onMounted(() => {
     loadingRoute.value = false
   })
 })
+
+// إعدادات التطبيق من config العام
+const config = useRuntimeConfig()
+const appLogo = typeof config.public?.appLogo === 'string' ? config.public.appLogo : ''
+const appName = config.public?.appName || 'App Name'
+const theme = config.public?.theme === 'dark' ? 'dark' : 'light'
+
+// توليد قائمة السايدبار ديناميكيًا حسب صلاحيات المستخدم
+const { sidebarMenu } = useSidebarMenu(computed(() => currentUser.value))
 </script>
 
 <style scoped>
@@ -81,30 +89,13 @@ onMounted(() => {
   z-index: 9999;
 }
 
-/* تخطيط الصفحة الرئيسي */
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: row;
-  background: var(--bs-body-bg, #f8fafc);
-}
-
-.page-wrapper {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.page-header {
-  background: var(--bs-body-bg, #fff);
-  border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 0.5rem;
-}
-
-.page-body {
-  flex: 1 1 0%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+/* لودر تحميل المستخدم */
+.user-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.9);
+  z-index: 9998;
+  font-size: 1.2rem;
+  color: #333;
 }
 </style>

@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useApi } from '@/composables/useApi'
 
 const currentUser = ref<any>(null)
@@ -22,10 +22,12 @@ export function useCurrentUser() {
         return
       }
       const { get } = useApi()
-      const data: UserResponse = await get('admin/me', {
+      const data = await get<UserResponse>('admin/me', {
         headers: { Authorization: `Bearer ${token}` }
       })
+
       currentUser.value = data?.user || data
+      console.log(data)
     } catch (e: any) {
       currentUser.value = null
       errorUser.value = e?.message || 'Unknown error'
@@ -34,9 +36,7 @@ export function useCurrentUser() {
     }
   }
 
-  onMounted(() => {
-    fetchCurrentUser()
-  })
+  // ⚠️ أزلنا onMounted() — اجعل المكون هو من يستدعي fetchCurrentUser()
 
   return { currentUser, loadingUser, errorUser, fetchCurrentUser }
 }

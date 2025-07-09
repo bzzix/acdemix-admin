@@ -2,7 +2,8 @@
   <li
     class="nav-item"
     :class="{ active: isActive, dropdown: hasChildren, 'show': hasChildren && isOpen }"
-    @mouseleave="isOpen = false"
+    @mouseleave="onMouseLeave"
+    @mouseenter="onMouseEnter"
   >
     <template v-if="hasChildren">
       <a
@@ -68,7 +69,6 @@ const props = defineProps({
   currentRoute: { type: [String, null], default: null },
   user: { type: Object, default: null }
 })
-const isOpen = ref(false)
 const hasChildren = computed(() => Array.isArray(props.item.children) && props.item.children.length > 0)
 const isActive = computed(() => {
   if (props.item.to && props.currentRoute) {
@@ -79,12 +79,43 @@ const isActive = computed(() => {
   }
   return false
 })
+
+
+// إذا كان العنصر نشط أو أحد عناصره الفرعية نشطة، افتح القائمة تلقائياً
+import { watch } from 'vue'
+const isOpen = ref(false)
+const isMouseOver = ref(false)
+watch(
+  () => isActive.value,
+  (active) => {
+    if (hasChildren.value) {
+      // يظل مفتوح إذا كان نشط أو مؤشر عليه
+      isOpen.value = !!active || isMouseOver.value
+    }
+  },
+  { immediate: true }
+)
+
+const onMouseLeave = () => {
+  isMouseOver.value = false
+  if (hasChildren.value && !isActive.value) {
+    isOpen.value = false
+  }
+}
+
+const onMouseEnter = () => {
+  isMouseOver.value = true
+  if (hasChildren.value) {
+    isOpen.value = true
+  }
+}
+
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
 }
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .nav-item.active > .nav-link,
 .nav-link.active {
   background: var(--bs-primary-bg-subtle, #f0f0f0);
@@ -93,4 +124,8 @@ const toggleDropdown = () => {
 .dropdown-menu {
   min-width: 200px;
 }
-</style>
+/* العناصر الفرعية النشطة أقل سمكاً */
+.dropdown-menu .nav-link.active {
+  font-weight: 500;
+}
+</style> -->

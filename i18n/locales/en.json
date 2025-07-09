@@ -1,4 +1,24 @@
 {
-  "hello": "Welcome to our website!",
-  "welcome": "Hello and welcome"
+  "hello": "Welcome to our site!",
+  "welcome": "Welcome",
+  "dashboard": "Dashboard",
+  "users": "Users",
+  "tenants": "Tenants",
+  "support": "Support",
+  "settings": "Settings",
+  "generalSettings": "General Settings",
+  "profile": "Profile",
+  "security": "Security",
+  "maintenanceMode": "Maintenance Mode",
+  "privacy": "Privacy",
+  "emailSettings": "Email Settings",
+  "logoutConfirmationMessage": "Are you sure you want to log out?",
+  "confirm": "Confirm",
+  "logoutConfirm": "Yes, log out",
+  "cancel": "Cancel",
+  "login": "Login",
+  "logOut": "Log Out",
+  "paymentSettings": "Payment Settings",
+  "stripe": "Stripe",
+  "moyasar": "Moyasar"
 }
